@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <title>Report Metadata</title>
+  </head>
+  <body>
+    {% for metadata in report_metadata%}
+    <h4>{{metadata[0]}} : {{metadata[-1]}}</h4>
+    {% endfor %}
+    <table>
+      <tr>
+        <th>Question</th>
+        <th>Number of Quetions</th>
+        <th>Number Of Passed Questions</th>
+        <th>Number of Failed Questions</th>
+      </tr>
+      {% for stats in audit_summary_stats %}
+      <tr>
+        <td>{{ stats[0] }}</td>
+        <td>{{ stats[1] }}</td>
+        <td>{{ stats[2] }}</td>
+        <td>{{ stats[3] }}</td>
+      </tr>
+      {% endfor%}
+    </table>
+  </body>
+</html>

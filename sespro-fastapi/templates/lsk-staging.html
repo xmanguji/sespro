@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1280, initial-scale=1.0" />
+    <title>Greeting</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/staging/static/tailwind.css" />
+    <link rel="stylesheet" href="/staging/static/global.css" />
+    <link rel="stylesheet" href="/staging/static/lsk/style.css" />
+    <script
+      src="https://kit.fontawesome.com/7b50f6a256.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      @page:after {
+        content: 'counter(page)',
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+  {% block javascript %}
+  <script>
+    var audit_data = {{audit_data|tojson|safe}}
+  </script>
+  {% endblock %}
+  <body class="text-lsk-purple">
+    <div id="page-header" class="page-header" style="text-align: center">
+      <img src="https://mm-lsk-staging.s3.amazonaws.com/new-lsk-logo-with-text.png" style="height: 75px" />
+    </div>
+
+    <div class="page-footer"></div>
+    <table>
+      <thead>
+        <tr>
+          <td>
+            <div class="page-header-space"></div>
+          </td>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <div class="page">
+              <div class="main flex flex-col">
+                <div class="main-header"></div>
+                <div class="main-content no-center flex-1">
+                  <div class="audit-stats-block">
+                    <h1 class="mt-2 text-4xl text-center font-bold">Logan Sqaure Kitchen</h1>
+                    <div class="mt-6 flex flex-wrap justify-center font-bold px-24">
+                      <div
+                        class="w-1/2 mb-12 flex items-center justify-center space-x-4"
+                      >
+                        <i class="text-lsk-green text-5xl fas fa-map-marked"></i>
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >
+                            City, State, Zip
+                          </p>
+                          <p class="text-lsk-purple text-2xl">{{ audit_data.extra['cityStateZip'] }}</p>
+                        </div>
+                      </div>
+                      <div
+                        class="w-1/2 mb-12 flex items-center justify-center space-x-4"
+                      >
+                        <i class="text-lsk-green text-5xl fas fa-map-marker-alt"></i>
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >Address</p>
+                          <p class="text-lsk-purple text-2xl">{{ audit_data.extra['address'] }}</p>
+                        </div>
+                      </div>
+                      <div
+                        class="w-1/2 mb-12 flex items-center justify-center space-x-4"
+                      >
+                        <i class="text-lsk-green text-5xl fas fa-building"></i>
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >Company Name</p>
+                          <p class="text-lsk-purple text-2xl">{{ audit_data.extra['companyName'] }}</p>
+                        </div>
+                      </div>
+                      <div
+                        class="w-1/2 mb-12 flex items-center justify-center space-x-4"
+                      >
+                        <i class="text-lsk-green text-5xl fas fa-user-tie"></i>
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >Lead Auditor</p>
+                          <p class="text-lsk-purple text-2xl">{{ audit_data.extra['leadAuditor'] }}</p>
+                        </div>
+                      </div>
+                      <div
+                        class="w-1/2 mb-12 flex items-center justify-center space-x-4"
+                      >
+                        <i class="text-lsk-green text-5xl fas fa-users"></i>
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >Other Members</p>
+                          <p class="text-lsk-purple text-2xl">{{ audit_data.extra['otherMembers'] }}</p>
+                        </div>
+                      </div>
+                      {% for data in audit_data.report_metadata if not data[0]
+                      in ['Start Time', 'End Time', 'Audit Duration', 'Company Name', 'Address', 'City, State, Zip', 'Lead Auditor', 'Other Team Members', 'Site', 'Site Group', 'Site Manager', 'Auditor'] %}
+                      <div
+                        class="w-1/2 mb-6 flex items-center justify-center space-x-4"
+                      >
+                        {% if data[2] %}
+                        <i class="text-lsk-green text-5xl {{ data[2] }}"></i>
+                        {% else %}
+                        <i class="text-lsk-green text-5xl far fa-dot-circle"></i>
+                        {% endif %}
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >
+                            {{ data[0] }}
+                          </p>
+                          <p class="text-lsk-purple text-2xl">{{ data[1] }}</p>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      <div
+                        class="w-1/2 mb-6 flex items-center justify-center space-x-4"
+                      >
+                        <i class="text-lsk-green text-5xl fas fa-user"></i>
+                        <div class="w-72">
+                          <p
+                            class="text-lsk-purple text-sm uppercase tracking-wider opacity-75"
+                          >
+                            Auditor
+                          </p>
+                          <p class="text-lsk-purple text-2xl">{{ audit_data.signature_info.name }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="page" style="height: 600px;">
+              <div class="h-full flex items-center justify-center">
+                <div>
+                  <div class="flex items-center justify-center space-x-16">
+                    <p class="text-7xl font-bold text-gray-800">
+                      <sup id="passedQuestions"></sup>&frasl;<sub>121</sub>
+                    </p>
+                    <p class="text-7xl font-bold text-gray-800" id="percentageValue"></p>
+                  </div>
+                  <p class="text-3xl mt-8 text-center font-bold">Total Score</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="page">
+              <div class="main failures-graph">
+                <div class="main-title">Audit Summary by Section</div>
+                <div class="main-content">
+                  <div class="chart-container-full">
+                    <canvas
+                      id="auditSummaryGraph"
+                      width="768"
+                      height="600"
+                    ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% if audit_data.failures_for_this_audit|length > 0 %} 
+            {% for section, failed_areas in audit_data.failures_for_this_audit if failed_areas %}
+            <div class="page">
+              <div class="main question-detail">
+                <p class="arHeader header-warning" style="background: #8acf6f">
+                  {{ section|upper }}
+                </p>
+                <table
+                  class="min-w-full divide-y divide-gray-200"
+                  style="page-break-inside: auto"
+                  >
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        class="pl-6 pr-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        #
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Item
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        CFR Number
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        width="20%"
+                      >
+                        Comments
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        width="20%"
+                      >
+                        Photos
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        width="20%"
+                      >
+                        Action Item
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Result
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200" style="page-break-inside: auto">
+                    {% for arrs in failed_areas %}
+                    {% for failure in arrs %}
+                    <tr style="page-break-inside: avoid">
+                      <td
+                        class="text-left pl-6 pr-3 py-2 text-sm font-medium text-gray-900 bg-white"
+                      >
+                        {{ failure['question_number'] }}
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {{ failure['question_description'] }}
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {% if failure['reference'] %}
+                        {{ failure['reference'] }}
+                        {% endif %}
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {{ failure['nonconformance'] }}
+                      </td>
+                      <td
+                        class="text-left px-2 py-2 text-sm text-gray-700 space-y-1 bg-white"
+                      >
+                        <div
+                          class="w-full grid grid-cols-2 gap-2 justify-center"
+                        >
+                          {% for image in failure['images'] %} {% if not
+                          image == "" %}
+                          <div class="col-span-1">
+                            <img
+                              style="
+                                width: 100%;
+                                height: auto;
+                                max-height: 128px;
+                              "
+                              src="{{image}}"
+                              alt="No image"
+                            />
+                          </div>
+                          {% endif %} {% endfor %}
+                        </div>
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      ></td>
+                      <td
+                        class="text-center px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {% if 'pass' in failure and failure['pass'] == True %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-green-100 text-green-900 rounded-full px-4 py-1"
+                          >Pass</span
+                        >
+                        {% elif 'pass' in failure and failure['pass'] == False %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-red-100 text-red-900 rounded-full px-4 py-1"
+                          >Fail</span
+                        >
+                        {% elif 'pass' not in failure and 'unknown' not in failure %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-gray-100 text-gray-900 rounded-full px-4 py-1"
+                          >N/A</span
+                        >
+                        {% elif 'unknown' in failure %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-gray-100 text-gray-900 rounded-full px-4 py-1"
+                          >N/O</span
+                        >
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endfor %} {% endif %}
+
+            {% if audit_data.signature_info %}
+            <div class="page h-full">
+              <div class="main max-w-5xl mx-auto h-full flex flex-col justify-center text-left">
+                <div class="w-full">
+                  <p class="text-xl uppercase font-bold text-gray-800">Reviewed By:</p>
+                </div>
+                <div class="mt-8 flex items-center">
+                  <div class="w-1/3">
+                    <div class="flex items-center space-x-4">
+                      <div>
+                        <i class="text-4xl text-lsk-green fas fa-user-tie"></i>
+                        <p class="uppercase tracking-wider"><small>Name and Title</small></p>
+                        <p class="h-12 text-lg font-bold border-b-2 border-gray-600 text-transparent w-72"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="w-1/3">
+                    <div class="flex items-center space-x-4">
+                      <div>
+                        <i class="text-4xl text-lsk-green fas fa-signature"></i>
+                        <p class="uppercase tracking-wider"><small>Signature</small></p>
+                        <p class="h-12 text-lg font-bold border-b-2 border-gray-600 text-transparent w-72"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="w-1/3">
+                    <div class="flex items-center space-x-4">
+                      <div>
+                        <i class="text-4xl text-lsk-green far fa-calendar-alt"></i>
+                        <p class="uppercase tracking-wider"><small>Date</small></p>
+                        <p class="h-12 text-lg font-bold border-b-2 border-gray-600 text-transparent w-72"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td>
+            <div class="page-footer-space"></div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+  <script>
+    console.log("audit_data=>", audit_data)
+    var dynamicColors = function (index = null) {
+      let colors = [
+        "#2eb040",
+        "#5EB8FF",
+        "#9445FF",
+        "#FF2B60",
+        "#FFB138",
+        "#B30600",
+        "#FF2F28",
+      ]
+      // var r = Math.floor(Math.random() * 255)
+      // var g = Math.floor(Math.random() * 255)
+      // var b = Math.floor(Math.random() * 255)
+      // return "rgb(" + r + "," + g + "," + b + ")"
+      return index !== null && index < colors.length && index >= 0
+        ? colors[index]
+        : colors[Math.floor(Math.random() * colors.length)]
+    }
+
+    while (audit_data.rolling_scores_for_this_site.dates.length < 12) {
+      audit_data.rolling_scores_for_this_site.dates.push("N/A");
+    }
+    while (audit_data.rolling_scores_for_this_site.scores.length < 12) {
+      audit_data.rolling_scores_for_this_site.scores.push(0);
+    }
+
+    var optionBarChart = {
+      responsive: true,
+      legend: {
+        display: false,
+      },
+      plugins: {
+        labels: {
+          render: (args) => {
+            if (args.value == 0) return;
+            else return args.value + "%";
+          },
+        },
+      },
+      scales: {
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 100,
+              stepSize: 10,
+            },
+          },
+        ],
+      },
+    };
+
+    const totalQuestions = audit_data
+      .failures_for_this_audit
+      .reduce((acc, i) => {
+        return acc + i[1].flatMap(el => el).length
+      }, 0)
+
+    const passedQuestions = audit_data
+      .failures_for_this_audit
+      .reduce((acc, i) => {
+        return acc + i[1].flatMap(el => el).filter(el => el.pass === true).length
+      }, 0)
+    document.querySelector('#passedQuestions').innerText = passedQuestions
+    document.querySelector('#percentageValue').innerText = Math.round(passedQuestions * 100 / 121) + '%'
+
+    const graphData = audit_data
+      .failures_for_this_audit
+      .map(section => {
+        let sectionQuestions = section[1].flatMap(el => el)
+        let sectionQuestionsLength = sectionQuestions.length
+        return {
+          label: section[0],
+          data: {
+            pass: Math.ceil(sectionQuestions.filter(q => q.pass === true).length * 100 / sectionQuestionsLength),
+            fail: Math.ceil(sectionQuestions.filter(q => q.pass === false).length * 100 / sectionQuestionsLength),
+            na: Math.ceil(sectionQuestions.filter(q => q.pass === 'NA').length * 100 / sectionQuestionsLength),
+            no: Math.ceil(sectionQuestions.filter(q => q.pass === 'NO').length * 100 / sectionQuestionsLength),
+          },
+        }
+      });
+
+    const graphLables = [
+      {
+        label: 'In',
+        key: 'pass',
+        color: '#10B981',
+      },
+      {
+        label: 'Out',
+        key: 'fail',
+        color: '#EF4444',
+      },
+      {
+        label: 'N/A',
+        key: 'na',
+        color: '#F59E0B',
+      },
+      {
+        label: 'N/O',
+        key: 'no',
+        color: '#9CA3AF',
+      },
+    ];
+
+    const auditSummaryEl = document.querySelector('#auditSummaryGraph')
+    const auditSummaryGraph = new Chart(auditSummaryEl, {
+      type: 'bar',
+      data: {
+        labels: graphData.map(section => section.label),
+        datasets: graphLables.map(label => ({
+          label: label.label,
+          backgroundColor: label.color,
+          data: graphData.map(section => section.data[label.key])
+        }))
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+          yAxes: [{
+            gridLines: {
+              display: true,
+              color: "rgba(255,99,132,0.2)"
+            },
+            ticks: {
+              steps: 10,
+              stepValue: 5,
+              max: 100,
+            }
+          }],
+          xAxes: [{
+            gridLines: {
+              display: false
+            }
+          }]
+        }
+      }
+    })
+  </script>
+</html>

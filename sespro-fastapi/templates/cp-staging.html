@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1280, initial-scale=1.0" />
+    <title>Greeting</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/staging/static/tailwind.css" />
+    <link rel="stylesheet" href="/staging/static/global.css" />
+    <link rel="stylesheet" href="/staging/static/controlpoint/style.css" />
+    <script src="https://kit.fontawesome.com/7b50f6a256.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script>
+    <style>
+      @page:after {
+        content: 'counter(page)',
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+  {% block javascript %}
+  <script>
+    var audit_data = {{audit_data|tojson|safe}}
+  </script>
+  {% endblock %}
+  <body>
+    <div id="page-header" class="page-header text-center">
+      <img src="https://mm-cpoint-staging.s3.amazonaws.com/cp_horizontal.png" style="height: 100px" />
+    </div>
+
+    <div class="page-footer"></div>
+    <table>
+      <thead>
+        <tr>
+          <td>
+            <div class="page-header-space"></div>
+          </td>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <div class="page">
+              <div class="main flex flex-col">
+                <div class="main-header"></div>
+                <div class="main-content no-center flex-1">
+                  <div class="audit-stats-block">
+                    <div class="flex flex-wrap justify-center font-bold px-24">
+                      {% for data in audit_data.report_metadata if not data[0]
+                      in ['Company Name', 'Address', 'City, State, Zip', 'Lead Auditor','Other Team Members'] %}
+                      <div class="w-1/2 mb-12 flex items-center justify-center space-x-4">
+                        <i class="text-5xl text-cp-brown {{ data[2] }}"></i>
+                        <div class="w-72">
+                          <p class="text-sm text-gray-600 uppercase tracking-wider">
+                            {{ data[0] }}
+                          </p>
+                          {% if data[0] == 'Start Time' or data[0] == 'End Time' or data[0] == 'Location Average Score' %}
+                          <p id="{{data[0] | replace(' ','_')}}" class="text-2xl text-gray-900">{{ data[1] }}</p>
+                          {% else %}
+                          <p class="text-2xl text-gray-900">{{ data[1] }}</p>
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% if audit_data.extra %}
+            <div class="page">
+              <div class="main flex flex-col">
+                <div class="main-header"></div>
+                <div class="main-content no-center flex-1">
+                  <div class="audit-stats-block">
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-6 grid-flow-row-dense font-bold px-24">
+                      {% for data in audit_data.extra.items() %}
+                      {% if not data[0] == 'training_verification' %}
+                      <div class="col-span-1 mb-12 flex items-center space-x-4">
+                        <i class="text-5xl text-cp-brown {{ data[2] }}"></i>
+                        <div>
+                          <p class="text-sm text-gray-600 uppercase tracking-wider">
+                            {{ data[0] | replace('_',' ') }}
+                          </p>
+                          <p class="text-gray-900 text-2xl">{{ data[1] }}</p>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                      <div class="col-span-2 mb-12 flex items-center space-x-4">
+                        <i class="text-5xl text-cp-brown {{ audit_data.extra['training_verification'] }}"></i>
+                        <div>
+                          <p class="text-sm text-gray-600 uppercase tracking-wider">
+                            Training Verification
+                          </p>
+                          <p class="text-gray-900 text-2xl">{{ audit_data.extra['training_verification'] }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if audit_data.final_comments %}
+            <div class="page">
+              <div class="main flex flex-col">
+                <div class="main-header"></div>
+                <div class="main-content no-center flex-1">
+                  <div class="max-w-3xl mx-auto audit-stats-block space-y-2">
+                    {{ audit_data.final_comments }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            {%if audit_data.rolling_scores_for_all_sites | length > 0%} {% set
+            list_rolling_scores_all =
+            audit_data.rolling_scores_for_all_sites.values()|list %} {% for
+            rolling_scores_data in
+            audit_data.rolling_scores_for_all_sites.items()%} {% if not
+            loop.index % 2 == 0 %}
+            <div class="page">
+              <div class="main">
+                <div class="main-title">
+                  Audit Scores Summary (across all sites)
+                </div>
+                <div class="main-content">
+                  {% if loop.index == audit_data.rolling_scores_for_all_sites |
+                  length %}
+                  <div class="chart-container-full">
+                    <canvas
+                      id="rolling_scores_chart_{{loop.index}}"
+                      width="768"
+                      height="600"
+                    ></canvas>
+                  </div>
+                  {% else %}
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-around;
+                      width: 100%;
+                    "
+                  >
+                    <div>
+                      <canvas
+                        id="rolling_scores_chart_{{loop.index}}"
+                        width="389"
+                        height="600"
+                      ></canvas>
+                    </div>
+                    <div>
+                      <canvas
+                        id="rolling_scores_chart_{{loop.index+1}}"
+                        width="389"
+                        height="600"
+                      ></canvas>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endif %} {% endfor %} {%endif%}
+            <div class="page">
+              <div class="main failures-graph">
+                <div class="main-title">
+                  Audit Scores Summary (Rolling last 12 audits)
+                </div>
+                <div class="main-content">
+                  <div class="chart-container-full">
+                    <canvas
+                      id="rolling_scores_for_this_site"
+                      width="768"
+                      height="600"
+                    ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="page">
+              <div class="main failures-graph">
+                <div class="main-title">
+                  Audit Fails By Section (this location)
+                </div>
+                <div class="main-content">
+                  <div class="chart-div">
+                    <canvas
+                      id="non_conforming_area_this_site"
+                      width="400"
+                      height="450"
+                    ></canvas>
+                  </div>
+                  <div class="questionDiv space-y-2">
+                    {% for question_number in
+                    audit_data.summed_failures_for_this_site.questions %}
+                    <div class="flex items-center space-x-2">
+                      <div
+                        class="flex-shrink-0 relative rounded-full h-10 w-10 bg-cp-brown"
+                      >
+                        {%if loop.index == 1 %}
+                        <span
+                          class="absolute inset-x-0 -mt-6 -ml-3 uppercase tracking-wider text-xs font-bold"
+                        >
+                          Question
+                        </span>
+                        {% endif %}
+                        <p class="absolute inset-0 flex items-center justify-center">
+                          <span class="text-white font-bold text-xl">{{ question_number }}</span>
+                        </p>
+                      </div>
+                      <div class="text-left">
+                        <p class="text-gray-900 line-clamp-2">
+                          {{
+                          audit_data.summed_failures_for_this_site.titles[loop.index-1]
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% if audit_data.summed_failures_for_all_sites.questions|length >
+            0%}
+            <div class="page">
+              <div class="main failures-graph">
+                <div class="main-title">
+                  Audit Fails By Section (All locations)
+                </div>
+                <div class="main-content">
+                  <div class="chart-div">
+                    <canvas
+                      id="non_conforming_area_all_sites"
+                      width="400"
+                      height="450"
+                    ></canvas>
+                  </div>
+                  <div class="questionDiv space-y-2">
+                    {% for question_number in
+                    audit_data.summed_failures_for_all_sites.questions %}
+                    <div class="flex items-center space-x-2">
+                      <div
+                        class="relative flex-shrink-0 relative rounded-full h-10 w-10 bg-cp-brown"
+                      >
+                        {%if loop.index == 1 %}
+                        <span
+                          class="absolute inset-x-0 -mt-6 -ml-3 uppercase tracking-wider text-xs font-bold"
+                        >
+                          Question
+                        </span>
+                        {% endif %}
+                        <p
+                          class="absolute inset-0 flex items-center justify-center"
+                        >
+                          <span class="text-white font-bold text-xl"
+                            >{{ question_number }}</span
+                          >
+                        </p>
+                      </div>
+                      <div class="text-left">
+                        <p class="text-gray-900 line-clamp-2">
+                          {{
+                          audit_data.summed_failures_for_all_sites.titles[loop.index-1]
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="page">
+              <div class="main failures-graph flex flex-col">
+                <div class="main-title flex-shrink-0">
+                  Audit Fails By Section (this location)
+                </div>
+                <div class="main-content flex-1">
+                  <div class="chart-container-full h-full flex justify-center">
+                    <canvas
+                      id="failures_by_section_for_this_site"
+                      width="450"
+                      height="450"
+                    ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% if audit_data.failures_by_section_for_all_sites.sections | length
+            > 0%}
+            <div class="page">
+              <div class="main failures-graph flex flex-col">
+                <div class="main-title flex-shrink-0">
+                  Audit Fails By Section (All locations)
+                </div>
+                <div class="main-content flex-1">
+                  <div class="chart-container-full h-full flex justify-center">
+                    <canvas
+                      id="failures_by_section_for_all_sites"
+                      width="450"
+                      height="450"
+                    ></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %} 
+
+            {% if audit_data.failures_for_this_audit|length > 0 %}
+            {% for section, failed_areas in audit_data.failures_for_this_audit
+            if failed_areas %} {% set pageloop = loop %} {% for
+            page_failed_areas in failed_areas%}
+            <div class="page">
+              <div class="main question-detail">
+                {%if loop.index == 1 %} 
+                <p class="arHeader header-warning" style="background: #17becf">
+                  {{ section|upper }}
+                </p>
+                {% endif %}
+                <table
+                  class="min-w-full divide-y divide-gray-200"
+                  style="page-break-inside: auto"
+                >
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        class="pl-6 pr-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        #
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Question
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        width="20%"
+                      >
+                        Non-Conformance
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        width="20%"
+                      >
+                        Supporting Evidence
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        width="20%"
+                      >
+                        Corrective Action
+                      </th>
+                      <th
+                        scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Pass/Fail
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="bg-white divide-y divide-gray-200"
+                    style="page-break-inside: auto"
+                  >
+                    {% for failure in page_failed_areas %}
+                    <tr style="page-break-inside: avoid">
+                      <td
+                        class="text-left pl-6 pr-3 py-2 text-sm font-medium text-gray-900 bg-white"
+                      >
+                        {{ failure['question_number'] }}
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {{ failure['question_description'] }}
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {{ failure['nonconformance'] }}
+                      </td>
+                      <td
+                        class="text-left px-2 py-2 text-sm text-gray-700 space-y-1 bg-white"
+                      >
+                        <div
+                          class="w-full grid grid-cols-2 gap-2 justify-center"
+                        >
+                          {% for image in failure['images'] %} {% if not
+                          image == "" %}
+                          <div class="col-span-1">
+                            <img
+                              style="
+                                width: 100%;
+                                height: auto;
+                                max-height: 128px;
+                              "
+                              src="{{image}}"
+                              alt="No image"
+                            />
+                          </div>
+                          {% endif %} {% endfor %}
+                        </div>
+                      </td>
+                      <td
+                        class="text-left px-6 py-2 text-sm text-gray-700 bg-white"
+                      ></td>
+                      <td
+                        class="text-center px-6 py-2 text-sm text-gray-700 bg-white"
+                      >
+                        {% if 'pass' in failure and failure['pass'] ==
+                        True %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-green-100 text-green-900 rounded-full px-4 py-1"
+                          >Pass</span
+                        >
+                        {% elif 'pass' in failure and failure['pass'] ==
+                        False %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-red-100 text-red-900 rounded-full px-4 py-1"
+                          >Fail</span
+                        >
+                        {% else %}
+                        <span
+                          class="text-xs uppercase tracking-wider font-bold bg-gray-100 text-gray-900 rounded-full px-4 py-1"
+                          >N/A</span
+                        >
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endfor %} {% endfor %} {% endif %} {% if staff_competence %}
+            <div class="page">
+              <div class="main">
+                <p class="arHeader header-info" style="background: #9467bd">
+                  {{ 'Food Safety Staff Competence Challenge Questions'|upper }}
+                </p>
+                <table class="auditResults" width="100%">
+                  <tr>
+                    <td width="10%">Question #</td>
+                    <td width="30%">Question</td>
+                    <td width="30%">Correct Answer</td>
+                    <td width="20%">Staff Answer</td>
+                    <td width="10%">Pass or Fail</td>
+                  </tr>
+                  {% for question_number, question, meta_answer, staff_answer,
+                  result in staff_competence %}
+                  <tr>
+                    <td style="width: 50px !important">
+                      {{ question_number }}
+                    </td>
+                    <td style="height: 150px !important; text-align: left">
+                      {{ question }}
+                    </td>
+                    <td style="width: 30% !important; text-align: left">
+                      {{ meta_answer }}
+                    </td>
+                    <td style="width: 30% !important; text-align: left">
+                      {{ staff_answer }}
+                    </td>
+                    <td class="pass" data-value="{{ result }}">{{ result }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td>
+            <div class="page-footer-space"></div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+  <script>
+    console.log("audit_data=>", audit_data);
+
+    audit_data.report_metadata.map((item)=>{
+      switch(item[0]){
+        case "Start Time":
+        case "End Time":
+          //momentObj = moment(item[1], 'D MMM YYYY at HH:mm');
+          //console.log(momentObj.format('MMMM DD, YYYY hh:mm A'))
+        //console.log(item[0].replace(/\s/g, '_'))
+          document.querySelector(`#${item[0].replace(/\s/g, '_')}`).innerHTML=moment(item[1], 'D MMM YYYY at HH:mm').format('MMMM DD, YYYY hh:mm A');
+          break;
+        default:
+          break;
+      }
+    })
+
+    //document.querySelector("#Start_Time").innerHTML = "test"
+    //document.querySelector("#End_Time").innerHTML = "test"
+    //document.querySelector("#Most_Recent_Audit").innerHTML = "test"
+
+    var dynamicColors = function (index = null) {
+      let colors = [
+        "#2eb040",
+        "#5EB8FF",
+        "#9445FF",
+        "#FF2B60",
+        "#FFB138",
+        "#B30600",
+        "#FF2F28",
+      ]
+      
+      return index !== null && index < colors.length && index >= 0
+        ? colors[index]
+        : colors[Math.floor(Math.random() * colors.length)]
+    }
+
+    while (audit_data.rolling_scores_for_this_site.dates.length < 12) {
+      audit_data.rolling_scores_for_this_site.dates.push("N/A");
+    }
+    while (audit_data.rolling_scores_for_this_site.scores.length < 12) {
+      audit_data.rolling_scores_for_this_site.scores.push(0);
+    }
+
+    var bar_ctx = document
+      .getElementById("rolling_scores_for_this_site")
+      .getContext("2d");
+
+    var optionBarChart = {
+      layout: {
+        padding: {
+          top: 5,
+        },
+      },
+      legend: {
+        display: false,
+      },
+      plugins: {
+        labels: {
+          render: (args) => {
+            if (args.value == 0) return;
+            else return Math.round(args.value) + "%";
+          },
+          fontColor: "black",
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            gridLines: {
+              color: "transparent",
+              zeroLineColor: "black"
+            },
+            ticks: {
+              fontColor: "black"
+            }
+          },
+        ],
+        yAxes: [
+          {
+            gridLines: {
+              zeroLineColor: "black",
+            },
+            display: true,
+            ticks: {
+              beginAtZero: true,
+              min: 0,
+              max: 110,
+              stepSize: 10,
+              fontColor: "black",
+            },
+          },
+        ],
+      },
+    };
+
+    Chart.Bar("rolling_scores_for_this_site", {
+      data: {
+        labels: audit_data.rolling_scores_for_this_site.dates,
+        datasets: [
+          {
+            label: "Audit Scores Summary (Rolling last 12 audits)",
+            borderWidth: 3,
+            borderColor: "#913b3b",
+            hoverBorderColor: "#913b3b",
+            data: audit_data.rolling_scores_for_this_site.scores,
+          },
+        ],
+      },
+      options: optionBarChart,
+    });
+
+    let index = 0;
+    for (const [key, value] of Object.entries(
+      audit_data.rolling_scores_for_all_sites
+    )) {
+      index++;
+      const elm = "rolling_scores_chart_" + index;
+      optionBarChart.title = {
+        display: true,
+        text: key,
+      };
+
+      Chart.Bar(elm, {
+        data: {
+          labels: value.dates,
+          datasets: [
+            {
+              label: "Audit Scores Summary (Rolling last 12 audits)",
+              borderWidth: 3,
+              borderColor: "#913b3b",
+              hoverBorderColor: "#913b3b",
+              data: value.scores,
+              fill: false,
+            },
+          ],
+        },
+        options: optionBarChart,
+      });
+    }
+
+    var bar_ctx_non = document
+      .getElementById("non_conforming_area_this_site")
+      .getContext("2d");
+
+    Chart.Bar("non_conforming_area_this_site", {
+      data: {
+        labels: audit_data.summed_failures_for_this_site.questions,
+        datasets: [
+          {
+            label: "Non Conforming Areas - This site",
+            borderWidth: 3,
+            borderColor: "#913b3b",
+            hoverBorderColor: "#913b3b",
+            data: audit_data.summed_failures_for_this_site.failures,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        responsive: false,
+        legend: {
+          display: false,
+        },
+        plugins: {
+          labels: {
+            render: (args) => {
+              if (args.value == 0) return;
+              else return Math.round(args.value);
+            },
+          },
+        },
+        scales: {
+          xAxes: [
+            {
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Question",
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Failure Count",
+              },
+              display: true,
+              ticks: {
+                display: false,
+                min: 0,
+                max:
+                  Math.max.apply(
+                    null,
+                    audit_data.summed_failures_for_this_site.failures
+                  ) + 5,
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    if(audit_data.summed_failures_for_all_sites.questions && audit_data.summed_failures_for_all_sites.questions.length > 0){
+    Chart.Bar("non_conforming_area_all_sites", {
+      data: {
+        labels: audit_data.summed_failures_for_all_sites.questions,
+        datasets: [
+          {
+            label: "Non Conforming Areas - This site",
+            borderWidth: 3,
+            borderColor: "#913b3b",
+            hoverBorderColor: "#913b3b",
+            data: audit_data.summed_failures_for_all_sites.failures,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        responsive: false,
+        legend: { display: false },
+        plugins: {
+          labels: {
+            render: (args) => {
+              if (args.value == 0) return;
+              else return Math.round(args.value);
+            },
+          },
+        },
+        scales: {
+          xAxes: [
+            {
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Question",
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Failure Count",
+              },
+              display: true,
+              ticks: {
+                display: false,
+                min: 0,
+                max:
+                  Math.max.apply(
+                    null,
+                    audit_data.summed_failures_for_all_sites.failures
+                  ) + 5,
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+              },
+            },
+          ],
+        },
+      },
+    });
+  }
+    var bgColor = audit_data.failures_by_section_for_this_site.sections.map(
+      (section, index) => dynamicColors(index)
+    );
+    
+    if(audit_data.failures_by_section_for_this_site.sections && audit_data.failures_by_section_for_this_site.sections.length > 0){
+
+    new Chart(
+      document
+        .getElementById("failures_by_section_for_this_site")
+        .getContext("2d"),
+      {
+        type: "doughnut",
+        data: {
+          labels: audit_data.failures_by_section_for_this_site.sections,
+          datasets: [
+            {
+              label: "Audit Fails By section (this location)",
+              data: audit_data.failures_by_section_for_this_site.failures,
+              backgroundColor: bgColor,
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            labels: {
+              render: "percentage",
+              fontColor: audit_data.failures_by_section_for_this_site.sections.map(
+                () => "white"
+              ),
+              precision: 2,
+            },
+          },
+          responsive: false,
+          legend: {
+            display: true,
+            position: "bottom",
+          },
+        },
+      }
+    );
+      
+    }
+
+    if(audit_data.failures_by_section_for_all_sites.sections && audit_data.failures_by_section_for_all_sites.sections.length > 0)
+    new Chart(
+      document
+        .getElementById("failures_by_section_for_all_sites")
+        .getContext("2d"),
+      {
+        type: "doughnut",
+        data: {
+          labels: audit_data.failures_by_section_for_all_sites.sections,
+          datasets: [
+            {
+              label: "Audit Fails By section (this location)",
+              data: audit_data.failures_by_section_for_all_sites.failures,
+              backgroundColor: bgColor,
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            labels: {
+              render: "percentage",
+              fontColor: audit_data.failures_by_section_for_all_sites.sections.map(
+                () => "white"
+              ),
+              precision: 2,
+            },
+          },
+          responsive: false,
+          legend: {
+            display: true,
+            position: "bottom",
+          },
+        },
+      }
+    );
+  </script>
+</html>

@@ -1,0 +1,72 @@
+{
+  "name": "respro-web",
+  "version": "3.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "babel-runtime": "^6.26.0",
+    "buefy": "^0.8.20",
+    "chart.js": "^2.9.4",
+    "core-js": "^3.6.4",
+    "devextreme": "22.1.4",
+    "devextreme-vue": "22.1.4",
+    "lodash": "^4.17.21",
+    "postcss": "^8.3.5",
+    "register-service-worker": "^1.7.1",
+    "sass": "^1.80.4",
+    "sass-loader": "^9.0.3",
+    "uuid": "^8.3.2",
+    "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.0",
+    "vue-google-login": "^2.0.5",
+    "vue-json-excel": "^0.3.0",
+    "vue-material-design-icons": "^5.0.0",
+    "vue-moment": "^4.1.0",
+    "vue-radial-progress": "^0.3.2",
+    "vue-router": "^3.2.0",
+    "vue-signature-pad": "^2.0.2",
+    "vue-simple-markdown": "^1.1.4",
+    "vue-spinner": "^1.0.3",
+    "vuex": "^3.5.1",
+    "vuex-pathify": "^1.4.1",
+    "vuex-persistedstate": "^3.1.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.3.0",
+    "@vue/cli-plugin-eslint": "~4.3.0",
+    "@vue/cli-plugin-pwa": "~4.5.0",
+    "@vue/cli-service": "~4.3.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "tailwindcss": "^2.2.4",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {
+      "vue/no-v-model-argument": "off",
+      "vue/valid-v-model": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

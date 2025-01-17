@@ -1,0 +1,70 @@
+@import "~bulma/sass/utilities/_all";
+
+
+$primary: #1d3e57;
+$primary-light: findLightColor($primary);
+$primary-dark: findDarkColor($primary);
+$primary-invert: findColorInvert($primary);
+
+$info: $primary;
+$primary-light: findLightColor($info);
+$primary-dark: findDarkColor($info);
+$primary-invert: findColorInvert($info);
+
+$danger: #E47125;
+$danger-light: findLightColor($danger);
+$danger-dark: findDarkColor($danger);
+$danger-invert: findColorInvert($danger);
+
+$colors: mergeColorMaps(
+    (
+       
+        "white": (
+            $white,
+            $black,
+        ),
+        "black": (
+            $black,
+            $white,
+        ),
+        "light": (
+            $light,
+            $light-invert,
+        ),
+        "dark": (
+            $dark,
+            $dark-invert,
+        ),
+        "primary": (
+            $primary,
+            $primary-invert,
+            $primary-light,
+            $primary-dark,
+        ),
+        "danger": (
+            $danger,
+            $danger-invert,
+        ),
+        "link": (
+            $link,
+            $link-invert,
+        ),
+        "info": (
+            $info,
+            $info-invert,
+        ),
+        "success": (
+            $info,
+            $info-invert,
+        ),
+        "warning": (
+            $warning,
+            $warning-invert,
+        ),
+    ),
+    $custom-colors
+);
+
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";

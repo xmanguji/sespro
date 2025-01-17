@@ -1,0 +1,29 @@
+[{
+    "type": 0,
+    "text": "Something to br said",
+    "worth": 5,
+    "weight": 1.0,
+    "attachement": {}
+},
+{
+    "type": 1,
+    "text": 1,
+    "worth": 5,
+    "weight": 1.0,
+    "attachement": {}
+},
+{
+    "type": 2,
+    "text": 1,
+    "worth": 5,
+    "weight": 1.0,
+    "attachement": {}
+},
+{
+    "type": 1,
+    "text": 1,
+    "worth": 5,
+    "weight": 1.0,
+    "attachement": {}
+}
+]

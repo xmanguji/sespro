@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Test Group 1",
+        "render_enabled": "True"
+    },
+
+    {
+        "name": "Test Group 2",
+        "render_enabled": "True"
+    }
+]

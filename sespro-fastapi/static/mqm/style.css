@@ -1,0 +1,222 @@
+.page-header {
+  background-image: linear-gradient(red, yellow);
+  background-image: -webkit-linear-gradient(top, #5082e9, #7b50db);
+  height: 80px;
+  font-size: 3rem;
+  color: white;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  -webkit-print-color-adjust: exact;
+}
+
+div.main.question-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.audit-stats-block {
+  text-align: left;
+  width: 100%;
+}
+
+div.main img {
+  /* height: 650px; */
+  /* margin-top: 25px; */
+}
+
+h4 {
+  text-align: center;
+}
+
+td.pass,
+td.fail,
+td.na,
+td.no {
+  color: white;
+  font-weight: bold;
+  width: 10%;
+}
+
+td.pass {
+  background-color: #23d160 !important;
+  -webkit-print-color-adjust: exact;
+  content: attr(Yes);
+}
+td.fail {
+  background-color: #ff3860;
+  -webkit-print-color-adjust: exact;
+}
+td.na,
+td.no {
+  background-color: yellow;
+  -webkit-print-color-adjust: exact;
+  color: black;
+}
+
+table,
+tr,
+td {
+  margin: 0 !important;
+}
+
+table.auditStatsTable,
+table.auditResults {
+  width: 100%;
+  border-collapse: collapse;
+  /* height: 600px; */
+}
+
+table.auditResults tr.tr-body td div {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 85px;
+}
+
+p.arHeader {
+  font-size: 20px;
+  line-height: 1.5;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid black;
+  color: white;
+  padding: 3px 0;
+  margin-top: 0;
+  background-color: #00d1b2;
+  -webkit-print-color-adjust: exact;
+  width: 100%;
+}
+
+/* p.header-warning {
+    background: sandybrown;
+} */
+
+p.header-error {
+  background: #ff3860;
+}
+
+p.header-info {
+  background: #23d160;
+}
+
+table.auditStatsTable td,
+table.auditResults td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+table.auditResults td img {
+  width: 32px;
+  height: 32px;
+  margin: auto;
+}
+
+table.auditResults td span {
+  background-color: white;
+  -webkit-print-color-adjust: exact;
+  border-radius: 20px;
+  padding: 5px 10px;
+  color: #23d160;
+}
+
+table.auditResults tr.tr-header td {
+  background-color: #363636;
+  -webkit-print-color-adjust: exact;
+  border: 1px solid white;
+  color: white;
+  border-top: 1px solid black;
+}
+
+table.auditResults tr:first-child td:first-child {
+  border-left: 1px solid black;
+}
+table.auditResults tr:first-child td:last-child {
+  border-right: 1px solid black;
+}
+
+div.audit-stats-block table td {
+  text-align: left;
+  color: black !important;
+  border: 1px solid black !important;
+  background-color: white !important;
+  -webkit-print-color-adjust: exact;
+}
+div.audit-stats-block table tr > td:first-child {
+  font-weight: bold;
+}
+
+td {
+  text-align: center;
+}
+
+div.page-footer {
+  position: fixed;
+  bottom: 0px;
+  text-align: right;
+}
+
+td.pass[data-value="Fail"] {
+  background-color: #ff3860 !important;
+  -webkit-print-color-adjust: exact;
+}
+
+div.failures-graph img,
+div.failures-graph .chart-div {
+  width: 50% !important;
+  float: left;
+  display: flex;
+  justify-content: center;
+}
+
+div.failures-graph div.questionDiv {
+  width: 45% !important;
+  float: left !important;
+}
+
+div.questionDiv table {
+  width: 100%;
+  height: 500px !important;
+}
+
+div.questionDiv table td {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+div.questionDiv table tr:first-child {
+  height: 20px !important;
+  font-size: 12px !important;
+}
+div.questionDiv table tr:first-child td:first-child {
+  width: 50px !important;
+}
+
+table td > a {
+  display: block;
+  color: #209cee !important;
+}
+
+.signature_info table {
+  margin: auto !important;
+  border-collapse: collapse;
+}
+
+.signature_info table tr td:first-child {
+  font-weight: bold;
+}
+
+.signature_info table td {
+  border: 1px solid;
+  padding: 20pt;
+  text-align: left;
+}
+.signature_info table img {
+  width: 256px;
+  height: 256px;
+}
+
+table { page-break-inside:auto }
+tr    { page-break-inside:avoid; page-break-after:auto }
+thead { display:table-header-group }
+tfoot { display:table-footer-group }

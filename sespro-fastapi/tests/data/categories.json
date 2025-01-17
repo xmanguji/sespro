@@ -1,0 +1,15 @@
+[{
+    "text": "Some text that should be written here",
+    "icon": "This should be an icon",
+    "color": "A colour, or some colour",
+    "parent": null,
+    "children": ["", ""],
+    "challenge": false
+}, {
+    "text": "Some text that should be written here",
+    "icon": "This should be an icon",
+    "color": "A colour, or some colour",
+    "parent": null,
+    "children": ["", ""],
+    "challenge": false
+}]
