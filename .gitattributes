@@ -1,5 +1,66 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+
+source .venv/bin/activate 
+uvicorn main:app --reload
+
+(How to )
+docker build -t tst . --platform=linux/amd64
+docker tag tst:latest 701494763670.dkr.ecr.us-east-1.amazonaws.com/report-api:latest
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 701494763670.dkr.ecr.us-east-1.amazonaws.com
+aws s3 sync static/ s3://respro-android-staging/static --region=us-east-1
+docker push 701494763670.dkr.ecr.us-east-1.amazonaws.com/report-api:latest
+
+source /Users/trumpi/Desktop/MM/mqm-report-fastapi/.venv/bin/activate
+uvicorn main:app --reload
+
+============================
+import uvicorn
+from core.factory import create_app
+from mangum import Mangum
+from database import db, db_instance
+from pony.orm import commit, db_session
+from migration.initalization_script import initScript
+import os
+import hashlib as hs
+
+app = create_app(create_tables=True, check_tables=False)
+
+
+@app.on_event("startup")
+@db_session
+def startup_event():
+    print('=========initScript=======')
+    # initScript()
+
+
+# app = Mangum(app)
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+=================
+from core.factory import create_app
+from mangum import Mangum
+from database import db, db_instance
+from pony.orm import commit, db_session
+from migration.initalization_script import initScript
+import os
+import hashlib as hs
+
+app = create_app(create_tables=True, check_tables=False)
+
+
+@app.on_event("startup")
+@db_session
+def startup_event():
+
+    initScript()
+
+
+app = Mangum(app)
+
 Staging site https://dne2nrwmy0hcq.cloudfront.net/
 Production site https://editor.resprohealthandsafety.com/
 
