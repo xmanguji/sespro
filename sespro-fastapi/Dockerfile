@@ -12,5 +12,5 @@ RUN pip install psycopg2
 # install wrapper to translate API Gateway events from Lambda into ASGI requests (manually again, just in case)
 RUN pip install mangum
 
-# set lambda handler
+# set lambda handle
 CMD [ "main.app" ]
